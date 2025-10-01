@@ -3,17 +3,20 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explorer/core/common/provider/favourite_provider.dart';
 import 'package:explorer/view/role_based_login/user/models/app_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class CuratedItems extends StatelessWidget {
+class CuratedItems extends ConsumerWidget {
   final DocumentSnapshot<Object?> eCommerceItems;
   final Size size;
   const CuratedItems({super.key,required this.eCommerceItems,required this.size});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final provider = ref.watch(favoriteProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,8 +34,18 @@ class CuratedItems extends StatelessWidget {
             child: Padding(padding: EdgeInsets.all(12),
             child: Align(alignment: Alignment.topRight,child: CircleAvatar(
               radius: 18,
-              backgroundColor: Colors.black26,
-              child: Icon(Icons.favorite_border,color: Colors.white,),
+              backgroundColor: provider.isExist(eCommerceItems)? Colors.white: Colors.black,
+              child: GestureDetector(
+                onTap: (){
+                  ref.read(favoriteProvider).toggleFavorite(eCommerceItems);
+                },
+                child: Icon(
+                  provider.isExist(eCommerceItems)?Icons.favorite :
+                  Icons.favorite_border,
+
+                  color: provider.isExist(eCommerceItems)?Colors.red :
+                  Colors.white,),
+              ),
             ),),
             ),
           ),

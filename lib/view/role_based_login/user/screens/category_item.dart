@@ -6,14 +6,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:explorer/view/role_based_login/user/models/sub_category.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../../core/common/provider/favourite_provider.dart';
 import 'items_detail_screen/screen/item_detail_screen.dart';
 
-class CategoryItems extends StatefulWidget {
+class CategoryItems extends ConsumerStatefulWidget {
   final String selectedCategory;
   final String category;
   CategoryItems({
@@ -22,10 +24,10 @@ class CategoryItems extends StatefulWidget {
     required this.selectedCategory});
 
   @override
-  State<CategoryItems> createState() => _CategoryItemsState();
+  ConsumerState<CategoryItems> createState() => _CategoryItemsState();
 }
 
-class _CategoryItemsState extends State<CategoryItems> {
+class _CategoryItemsState extends ConsumerState<CategoryItems> {
 
   Map<String, Map<String,dynamic>> randomValueCache = {};
   TextEditingController searchController = TextEditingController();
@@ -59,6 +61,8 @@ class _CategoryItemsState extends State<CategoryItems> {
     Size size = MediaQuery.of(context).size;
     final CollectionReference itemsCollection =
     FirebaseFirestore.instance.collection('items');
+
+    final provider = ref.watch(favoriteProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(child: Column(
@@ -202,11 +206,16 @@ class _CategoryItemsState extends State<CategoryItems> {
                                 width: size.width * 0.5,
                                 child: Padding(padding: EdgeInsets.all(12),
                                   child: Align(alignment: Alignment.topRight,
-                                    child: CircleAvatar(
-                                      radius: 18,
-                                      backgroundColor: Colors.black26,
-                                      child: Icon(Icons.favorite_border,
-                                        color: Colors.white,),
+                                    child: GestureDetector(
+                                      onTap: (){
+                                        ref.read(favoriteProvider).toggleFavorite(items[index]);
+                                      },
+                                      child: Icon(
+                                        provider.isExist(items[index])?Icons.favorite :
+                                        Icons.favorite_border,
+
+                                        color: provider.isExist(items[index])?Colors.red :
+                                        Colors.white,),
                                     ),),
                                 ),
                               ),

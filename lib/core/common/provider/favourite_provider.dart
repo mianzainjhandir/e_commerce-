@@ -16,18 +16,26 @@ class FavoriteProvider extends ChangeNotifier{
     notifyListeners();
   }
   final userId = FirebaseAuth.instance.currentUser!.uid;
-  FavoriteProvider(){}
+  FavoriteProvider(){
+    loadFavorite();
+  }
 
   void toggleFavorite(DocumentSnapshot product)async{
     String productId = product.id;
     if(_favoriteIds.contains(productId)){
       _favoriteIds.remove(productId);
+      await _removeFavorite(productId);
     } else {
       _favoriteIds.add(productId);
       await _addFavorite(productId);
     }
     notifyListeners();
   }
+
+  bool isExist(DocumentSnapshot product){
+    return _favoriteIds.contains(product.id);
+  }
+
   Future<void> _addFavorite(String productId)async{
     try{
       await _firestore.collection("userFavorite").doc(productId).set({
@@ -39,4 +47,24 @@ class FavoriteProvider extends ChangeNotifier{
       throw (e.toString());
     }
   }
+
+   Future<void> _removeFavorite(String productId)async{
+     try{
+       await _firestore.collection("userFavorite").doc(productId).delete();
+     }catch(e){
+       throw (e.toString());
+     }
+   }
+
+   Future<void> loadFavorite () async {
+    try{
+      QuerySnapshot snapshot = await _firestore.collection("userFavorite")
+          .where('userId',isEqualTo: userId)
+          .get();
+      _favoriteIds = snapshot.docs.map((doc) => doc.id).toList();
+    }catch(e){
+      throw(e.toString());
+    }
+    notifyListeners();
+   }
 }

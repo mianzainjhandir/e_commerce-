@@ -6,18 +6,21 @@ import 'package:explorer/view/role_based_login/user/models/app_model.dart';
 import 'package:explorer/view/role_based_login/user/screens/items_detail_screen/widget/size_and_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:iconsax/iconsax.dart';
 
-class ItemDetailScreen extends StatefulWidget {
+import '../../../../../../core/common/provider/favourite_provider.dart';
+
+class ItemDetailScreen extends ConsumerStatefulWidget {
   final DocumentSnapshot<Object?> productItems;
   const ItemDetailScreen({super.key, required this.productItems});
 
   @override
-  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
+  ConsumerState<ItemDetailScreen> createState() => _ItemDetailScreenState();
 }
 
-class _ItemDetailScreenState extends State<ItemDetailScreen> {
+class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
   int currentIndex = 0;
   int selectedColorIndex = 1;
   int selectedSizeIndex = 1;
@@ -31,7 +34,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           (1 - widget.productItems['discountPercentage'] / 100))
           .toStringAsFixed(2),
     );
-
+    final provider = ref.watch(favoriteProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("Items Detail Screen"),
@@ -141,7 +144,18 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
                     Text("${Random().nextInt(2) + 3}.${Random().nextInt(5) + 4}"),
                     Text("(${Random().nextInt(300) + 55})"),
                     Spacer(),
-                    Icon(Icons.favorite_border),
+                    GestureDetector(
+                        onTap: (){
+                          provider.toggleFavorite(widget.productItems);
+                        },
+                        child : Icon(provider.isExist(widget.productItems)?
+                        Icons.favorite
+                            : Icons.favorite_border,
+                        color: provider.isExist(widget.productItems)? Colors.red: Colors.black,
+
+                        )
+
+                    ),
                   ],
                 ),
                 Text(
