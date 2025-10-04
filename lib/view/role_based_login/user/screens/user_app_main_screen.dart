@@ -1,6 +1,7 @@
 
 import 'package:explorer/view/role_based_login/user/screens/user_app_home_screen.dart';
 import 'package:explorer/view/role_based_login/user/screens/user_profile/profile_screen.dart';
+import 'package:explorer/view/role_based_login/user/user_activity/favorite_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserAppMainScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _AppMainScreenState extends State<UserAppMainScreen> {
   int selectedIndex = 0;
  final List pages = [
    UserAppHomeScreen(),
-    Scaffold(),
+    FavoriteScreen(),
     Scaffold(),
     UserProfile(),
   ];
@@ -42,8 +43,8 @@ class _AppMainScreenState extends State<UserAppMainScreen> {
                 icon: Icon(Icons.home),
                 label: "Home"),
             BottomNavigationBarItem(
-                icon: Icon(Icons.search),
-                label: "Search"),
+                icon: Icon(Icons.favorite_border),
+                label: "Favorite"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.notifications),
                 label: "Notifications"),
