@@ -57,9 +57,79 @@ class CartProvider with ChangeNotifier{
     }
     notifyListeners();
   }
+
+  Future<void> addQuantity(String productId)async{
+    int index = _carts.indexWhere((element)=> element.productId == productId);
+    _carts[index].quantity += 1;
+    await _updateCartInFirebase(productId, _carts[index].quantity);
+
+    notifyListeners();
+  }
+
+
+  Future<void> decreaseQuantity(String productId)async{
+    int index = _carts.indexWhere((element)=> element.productId == productId);
+    _carts[index].quantity -= 1;
+    await _updateCartInFirebase(productId, _carts[index].quantity);
+
+    if(_carts[index].quantity <=0){
+      _carts.removeAt(index);
+      await _firestore.collection("userCart").doc(productId).delete();
+
+    }else{
+      await _updateCartInFirebase(productId, _carts[index].quantity);
+    }
+    notifyListeners();
+  }
+
+  bool productExist(String productId){
+    return _carts.any((element) => element.productId == productId);
+  }
+
+  double totalCart(){
+    double total = 0;
+
+    for(var i = 0; i < _carts.length; i++){
+      final finalPrice = num.parse((_carts[i].productData['price']*
+          (1-_carts[i].productData['discountPercentage']/100))
+          .toStringAsFixed(2));
+      total += _carts[i].quantity * (finalPrice);
+    }
+    return total;
+  }
+
+  Future<void> loadCartItems()async{
+    try{
+      QuerySnapshot snapshot = await _firestore.collection("userCart").where("uid",isEqualTo: userId).get();
+      _carts = snapshot.docs.map((doc){
+        final data = doc.data() as Map<String,dynamic>;
+        return CartModel(
+            productId: doc.id,
+            productData: data['productData'],
+            quantity: data['quantity'],
+            selectedColor: data['selectedColor'],
+            selectedSize: data['selectedSize'],
+        );
+      }).toList();
+
+    }catch(e){
+      print(e.toString());
+    }
+  }
+  // save order list in firestore
+
+
+
+  // Remove CartItems from firestore
+
+
+
+
   Future<void>_updateCartInFirebase(String productId, int quantity)async{
     try{
-      await _firestore.collection("userCart").doc(productId).update("quantity":quantity);
+      await _firestore.collection("userCart").doc(productId).update({
+        "quantity": quantity
+      });
     } catch(e){
       print(e.toString());
     }
