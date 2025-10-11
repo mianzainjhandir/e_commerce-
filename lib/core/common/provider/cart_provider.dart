@@ -122,7 +122,14 @@ class CartProvider with ChangeNotifier{
 
   // Remove CartItems from firestore
 
-
+  Future<void> deleteCartItem(String productId) async{
+    int index = _carts.indexWhere((element) => element.productId == productId);
+    if(index != 1){
+      _carts.removeAt(index);// remove from local cart
+      await _firestore.collection("userCart").doc(productId).delete(); // remove item from firestore
+      notifyListeners(); // Notify listeners to Update UI
+    }
+  }
 
 
   Future<void>_updateCartInFirebase(String productId, int quantity)async{
@@ -138,3 +145,4 @@ class CartProvider with ChangeNotifier{
 
 
 
+// Ok now we are going to design a cart screen and implement these features..
