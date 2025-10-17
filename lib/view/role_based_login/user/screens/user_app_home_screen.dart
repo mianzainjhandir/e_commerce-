@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explorer/core/common/cart_order_count.dart';
 import 'package:explorer/view/role_based_login/user/models/app_model.dart';
 import 'package:explorer/view/role_based_login/user/models/category_model.dart';
 import 'package:explorer/view/role_based_login/user/screens/category_item.dart';
@@ -39,29 +40,7 @@ class _AppHomeScreenState extends State<UserAppHomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                 Image.asset('assets/images/logo.jpg',height: 40,),
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Icon(Icons.shopping_bag,size: 28,),
-                    Positioned(
-                        right: -1,top: -5,
-                        child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text("3",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),),
-                      ),
-                    ))
-
-                  ],
-                ),
+                CartOrderCount(),
                 ],
               ),
             ),

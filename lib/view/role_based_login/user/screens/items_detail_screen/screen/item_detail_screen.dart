@@ -2,8 +2,11 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:explorer/core/common/cart_order_count.dart';
+import 'package:explorer/core/common/provider/cart_provider.dart';
 import 'package:explorer/view/role_based_login/user/models/app_model.dart';
 import 'package:explorer/view/role_based_login/user/screens/items_detail_screen/widget/size_and_color.dart';
+import 'package:explorer/widgets/show_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,48 +31,22 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    CartProvider cp = ref.watch(cartService);
+    FavoriteProvider provider = ref.watch(favoriteProvider);
 
     final finalprice = num.parse(
       (widget.productItems['price'] *
           (1 - widget.productItems['discountPercentage'] / 100))
           .toStringAsFixed(2),
     );
-    final provider = ref.watch(favoriteProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text("Items Detail Screen"),
         centerTitle: true,
         backgroundColor: Colors.white,
         actions: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(
-                Icons.shopping_bag,
-                size: 28,
-              ),
-              Positioned(
-                right: -1,
-                top: -5,
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Text(
-                      "3",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          CartOrderCount(),
+          SizedBox(width: 20,)
         ],
       ),
       body: ListView(
@@ -224,9 +201,12 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
                 ),
               ],
             ),
-          )
+
+          ),
+          SizedBox(height: 10,)
         ],
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {},
@@ -242,21 +222,39 @@ class _ItemDetailScreenState extends ConsumerState<ItemDetailScreen> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Iconsax.shopping_bag,
-                        color: Colors.black,
-                      ),
-                      Gap(5),
-                      Text(
-                        "ADD TO CART",
-                        style: TextStyle(
+                  child: GestureDetector(
+
+                    onTap: (){
+                      final productId = widget.productItems.id;
+                      final productData = widget.productItems.data() as Map<String,dynamic>;
+
+                      final selectedColor = widget.productItems['fcolor'][selectedColorIndex];
+                      final selectedSize = widget.productItems['sizes'][selectedSizeIndex];
+
+                      cp.addCart(
+                          productId,
+                          productData,
+                          selectedColor,
+                          selectedSize
+                      );
+                      showSnackBar(context, "${productData['name']} added to cart");
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Iconsax.shopping_bag,
                           color: Colors.black,
-                          letterSpacing: -1,
                         ),
-                      )
-                    ],
+                        Gap(5),
+                        Text(
+                          "ADD TO CART",
+                          style: TextStyle(
+                            color: Colors.black,
+                            letterSpacing: -1,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),
