@@ -82,6 +82,7 @@ class CartItems extends ConsumerWidget {
                                   borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(7),
                                   ),
+                                  //jjjjj
                                 ),
                                 child: Icon(
                                   Icons.remove,size: 20,color: Colors.white,
