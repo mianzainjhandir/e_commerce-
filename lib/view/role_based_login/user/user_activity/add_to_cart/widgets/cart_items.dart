@@ -1,16 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:explorer/core/common/provider/cart_provider.dart';
 import 'package:explorer/core/common/utils/color_conversation.dart';
 import 'package:explorer/view/role_based_login/user/user_activity/model/cart_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 
-class CartItems extends StatelessWidget {
+class CartItems extends ConsumerWidget {
   final CartModel cart;
   const CartItems({super.key, required this.cart});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    CartProvider cp = ref.watch(cartService);
     Size size = MediaQuery.of(context).size;
+    final finalPrice = num.parse((cart.productData['price']*(1-cart.productData['discountPercentage']/100)).toStringAsFixed(2));
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -47,7 +51,64 @@ class CartItems extends StatelessWidget {
                       children: [
                         Text("Color:"),
                         Gap(5),
-                        CircleAvatar(radius: 10, backgroundColor: getColorFromName(cart.selectedColor),)
+                        CircleAvatar(radius: 10, backgroundColor: getColorFromName(cart.selectedColor),
+                        ),
+                        SizedBox(width: 10,),
+                        Text("Size :"),
+                        Text(cart.selectedSize,style: TextStyle(fontWeight: FontWeight.bold),),
+
+                      ],
+                    ),
+                    SizedBox(height: 18,),
+                    Row(
+                      children: [
+                        Text("\$$finalPrice",style: TextStyle(
+                          color: Colors.pink,fontWeight: FontWeight.bold,letterSpacing: -1,fontSize: 22
+                        ),),
+                        SizedBox(width: 45,),
+                        Row(
+                          children: [
+                            GestureDetector(
+                              onTap : (){
+                                if(cart.quantity>1){
+                                  cp.decreaseQuantity(cart.productId);
+                                }
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 25,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(7),
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.remove,size: 20,color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            Text("1",style: TextStyle(
+                                color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
+                            SizedBox(width: 10,),
+                            GestureDetector(
+                              child: Container(
+                                height: 30,
+                                width: 25,
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(7),
+                                  ),
+                                ),
+                                child: Icon(
+                                  Icons.add,size: 20,color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
                       ],
                     )
                   ],
