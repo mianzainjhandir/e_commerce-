@@ -72,6 +72,7 @@ class CartItems extends ConsumerWidget {
                               onTap : (){
                                 if(cart.quantity>1){
                                   cp.decreaseQuantity(cart.productId);
+
                                 }
                               },
                               child: Container(
@@ -90,10 +91,19 @@ class CartItems extends ConsumerWidget {
                               ),
                             ),
                             SizedBox(width: 10,),
-                            Text("1",style: TextStyle(
+                            Text(
+                              cart.quantity.toString(),style: TextStyle(
                                 color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
                             SizedBox(width: 10,),
                             GestureDetector(
+                              onTap: (){
+                                cp.addCart(
+                                    cart.productId,
+                                    cart.productData,
+                                    cart.selectedColor,
+                                    cart.selectedSize
+                                );
+                              },
                               child: Container(
                                 height: 30,
                                 width: 25,
@@ -115,10 +125,14 @@ class CartItems extends ConsumerWidget {
                   ],
                 ),
             ),
+            if(cart.isNo)
         ],
         ),
       ],
       ),
     );
+  }
+  Widget _buildSummarySection(BuildContext context, CartProvider cartservice){
+    return Container();
   }
 }
