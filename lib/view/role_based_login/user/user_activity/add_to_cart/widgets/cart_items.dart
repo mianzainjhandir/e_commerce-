@@ -125,14 +125,11 @@ class CartItems extends ConsumerWidget {
                   ],
                 ),
             ),
-            if(cart.isNo)
         ],
+
         ),
       ],
       ),
     );
-  }
-  Widget _buildSummarySection(BuildContext context, CartProvider cartservice){
-    return Container();
   }
 }

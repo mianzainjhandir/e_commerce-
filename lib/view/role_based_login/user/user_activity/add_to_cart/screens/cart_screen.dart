@@ -47,9 +47,68 @@ class _CartScreenState extends ConsumerState<CartScreen> {
               color: Colors.red,
               fontSize: 18,
               fontWeight: FontWeight.w600,
-            ),),)
+            ),
+            ),
+            ),
         ),
+          if(carts.isNotEmpty) _buildSummarySection(context, cp)
       ],
+      ),
+    );
+  }
+  Widget _buildSummarySection(BuildContext context, CartProvider cp){
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text("Delivery",style: TextStyle(
+                fontSize: 20,color: Colors.black,fontWeight: FontWeight.bold,
+
+              ),),
+              SizedBox(width: 10,),
+              Expanded(child: Divider()),
+              SizedBox(width: 10,),
+              Text(
+                "\$4.99",style: TextStyle(
+                fontSize: 20,color: Colors.red,
+                fontWeight: FontWeight.bold,letterSpacing: -1,
+
+              ),),
+
+            ],
+          ),
+          SizedBox(height: 20,),
+          Row(
+            children: [
+              Text("Total Order",style: TextStyle(
+                fontWeight: FontWeight.w600,fontSize: 20,color: Colors.black
+              ),),
+              SizedBox(width: 10,),
+              Expanded(child: Divider()),
+              SizedBox(width: 10,),
+              Text("\$${(cp.totalCart()).toStringAsFixed(2)}", style: TextStyle(
+                color: Colors.redAccent,fontSize: 22,fontWeight: FontWeight.w600,letterSpacing: -1,
+              ),)
+
+            ],
+          ),
+          SizedBox(height: 40,),
+          MaterialButton(
+            color: Colors.black,
+            height: 70,
+            minWidth: MediaQuery.of(context).size.width-50,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            onPressed: (){},
+            child: Text("Pay \$${(cp.totalCart() +4.99).toStringAsFixed(2)}",
+            style: TextStyle(
+                fontSize: 20,fontWeight: FontWeight.bold
+                ,color: Colors.white
+            ),),
+          ),
+        ],
       ),
     );
   }
