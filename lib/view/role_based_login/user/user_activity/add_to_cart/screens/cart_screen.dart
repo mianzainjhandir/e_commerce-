@@ -101,7 +101,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             height: 70,
             minWidth: MediaQuery.of(context).size.width-50,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onPressed: (){},
+            onPressed: (){
+              _showOrderConfirmDetail(context, cp);
+            },
             child: Text("Pay \$${(cp.totalCart() +4.99).toStringAsFixed(2)}",
             style: TextStyle(
                 fontSize: 20,fontWeight: FontWeight.bold
@@ -111,5 +113,31 @@ class _CartScreenState extends ConsumerState<CartScreen> {
         ],
       ),
     );
+  }
+  void _showOrderConfirmDetail(BuildContext context, CartProvider cp){
+    showDialog(context: context, builder: (context){
+      return StatefulBuilder(builder: (context,setDialogState){
+        return AlertDialog(
+          title: Text("Confirm Your Order"),
+          content: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ListBody(
+                children: cp.carts.map((cartItem){
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("${cartItem.productData['name']} x ${cartItem.quantity}")
+                    ],
+                  );
+                }).toList(),
+              ),
+              Text("Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}")
+            ],
+          ),
+        );
+      });
+    });
   }
 }
