@@ -133,7 +133,9 @@ class _CartScreenState extends ConsumerState<CartScreen> {
                   );
                 }).toList(),
               ),
-              Text("Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}")
+              Text("Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
+              SizedBox(height: 10,),
+              Text("Select Payment Method")
             ],
           ),
         );
