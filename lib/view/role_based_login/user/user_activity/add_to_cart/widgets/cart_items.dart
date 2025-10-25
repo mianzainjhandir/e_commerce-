@@ -60,19 +60,31 @@ class CartItems extends ConsumerWidget {
                       ],
                     ),
                     SizedBox(height: 18,),
+                    // ... Inside the Expanded(Column) ...
                     Row(
                       children: [
-                        Text("\$$finalPrice",style: TextStyle(
-                          color: Colors.pink,fontWeight: FontWeight.bold,letterSpacing: -1,fontSize: 22
-                        ),),
-                        SizedBox(width: 45,),
+                        // 1. Price
+                        Text(
+                          "\$$finalPrice",
+                          style: TextStyle(
+                            color: Colors.pink,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -1,
+                            fontSize: 22,
+                          ),
+                        ),
+
+                        // 2. Spacer کا استعمال کریں تاکہ یہ باقی تمام جگہ بھر لے
+                        const Spacer(), // <--- 45 pixel SizedBox کو اس سے بدل دیں
+
+                        // 3. Quantity Controls
                         Row(
                           children: [
+                            // Decrease Button
                             GestureDetector(
-                              onTap : (){
-                                if(cart.quantity>1){
+                              onTap: () {
+                                if (cart.quantity > 1) {
                                   cp.decreaseQuantity(cart.productId);
-
                                 }
                               },
                               child: Container(
@@ -80,48 +92,45 @@ class CartItems extends ConsumerWidget {
                                 width: 25,
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(7),
-                                  ),
-                                  //jjjjj
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(7)),
                                 ),
-                                child: Icon(
-                                  Icons.remove,size: 20,color: Colors.white,
-                                ),
+                                child: Icon(Icons.remove, size: 20, color: Colors.white),
                               ),
                             ),
-                            SizedBox(width: 10,),
+
+                            // Quantity Text
+                            const Gap(8), // <--- 10 pixel SizedBox کو Gap سے بدلیں یا چھوٹا کریں
                             Text(
-                              cart.quantity.toString(),style: TextStyle(
-                                color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),),
-                            SizedBox(width: 10,),
+                              cart.quantity.toString(),
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+
+                            // Increase Button
+                            const Gap(8), // <--- 10 pixel SizedBox کو Gap سے بدلیں یا چھوٹا کریں
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 cp.addCart(
-                                    cart.productId,
-                                    cart.productData,
-                                    cart.selectedColor,
-                                    cart.selectedSize
-                                );
+                                    cart.productId, cart.productData, cart.selectedColor, cart.selectedSize);
                               },
                               child: Container(
                                 height: 30,
                                 width: 25,
                                 decoration: BoxDecoration(
                                   color: Colors.blue,
-                                  borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(7),
-                                  ),
+                                  borderRadius: BorderRadius.vertical(top: Radius.circular(7)),
                                 ),
-                                child: Icon(
-                                  Icons.add,size: 20,color: Colors.white,
-                                ),
+                                child: Icon(Icons.add, size: 20, color: Colors.white),
                               ),
                             ),
                           ],
                         )
                       ],
                     )
+// ...
                   ],
                 ),
             ),
