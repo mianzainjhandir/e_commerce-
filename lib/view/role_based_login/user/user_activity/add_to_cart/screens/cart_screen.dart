@@ -116,32 +116,53 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     );
   }
   void _showOrderConfirmDetail(BuildContext context, CartProvider cp){
+    String? addressError;
     showDialog(context: context, builder: (context){
       return StatefulBuilder(builder: (context,setDialogState){
         return AlertDialog(
           title: Text("Confirm Your Order"),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ListBody(
-                children: cp.carts.map((cartItem){
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("${cartItem.productData['name']} x ${cartItem.quantity}")
-                    ],
-                  );
-                }).toList(),
-              ),
-              Text("Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
-              SizedBox(height: 10,),
-              Text("Select Payment Method",style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
-              ),)
-            ],
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                ListBody(
+                  children: cp.carts.map((cartItem){
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("${cartItem.productData['name']} x ${cartItem.quantity}")
+                      ],
+                    );
+                  }).toList(),
+                ),
+                Text("Total Payable Price: \$${(cp.totalCart() + 4.99).toStringAsFixed(2)}"),
+                SizedBox(height: 10,),
+                Text("Select Payment Method",style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),),
+                SizedBox(height: 10,),
+
+
+                Text("Add your Delivery Address",style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),),
+                TextField(decoration: InputDecoration(
+                  hintText: "Enter your address",
+                  errorText: addressError,
+                  border: OutlineInputBorder(),
+                ),)
+              ],
+            ),
           ),
+          actions: [
+            TextButton(onPressed: (){}, child: Text("Confirm")),
+            TextButton(onPressed: (){
+              Navigator.of(context).pop();
+            }, child: Text("Cancel")),
+          ],
         );
       });
     });
