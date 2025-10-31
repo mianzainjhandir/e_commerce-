@@ -9,9 +9,23 @@ class AddPaymentMethods extends StatefulWidget {
 }
 
 class _AddPaymentMethodsState extends State<AddPaymentMethods> {
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Payment Method"),
+
+      ),
+      body: SafeArea(child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+      
+      child: Form(child: Column(
+        children: [
+
+        ],
+      )),)),
+    );
   }
 }
 //,,,,,,
